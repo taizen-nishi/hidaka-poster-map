@@ -6,7 +6,7 @@ all_df = pd.read_csv('public/data/all.csv')
 arealist_df = pd.read_csv('arealist.csv')
 
 # 各地域
-status_counts = all_df.groupby('area').apply(
+status_counts = all_df.groupby('area_name').apply(
     lambda x: ( 
         (
             (x['status'] == 1).sum() + #完了
@@ -28,9 +28,9 @@ overall_progress = (
 ) / len(all_df)
 
 area_mapping = dict(zip(arealist_df['area_name'], arealist_df['area_id']))
-all_areas = pd.DataFrame(area_mapping.items(), columns=['area', 'area_id'])
+all_areas = pd.DataFrame(area_mapping.items(), columns=['area_name', 'area_id'])
 
-merged_df = all_areas.merge(status_counts, on='area', how='left')
+merged_df = all_areas.merge(status_counts, on='area_name', how='left')
 merged_df['progress'] = merged_df['progress'].fillna(0)
 merged_df = merged_df[['area_id', 'progress']].sort_values(by='area_id')
 

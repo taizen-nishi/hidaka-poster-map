@@ -1,29 +1,19 @@
-#!/bin/env bash
+#!/usr/bin/env bash
+# main.sh — 日高ポスターマップ自動更新
 set -euo pipefail
 
-cd ~/tokyo2024-poster-map/ #Path to the folder
+# スクリプト自身の場所へ移動
+BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$BASE_DIR"
 
-git pull
+# ▼▼ 自分の CSV 公開 URL に置き換える ▼▼
+CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vTiUd6Jt7sNAJ86n9pZ3p2tOiVB7_84dmrWVg1_D5hH7X8sLeglyW2GXVBUU9ZsBgMgCTBvdrN2Oix_/pub?gid=0&single=true&output=csv"
 
-# Download latest CSV from spreadsheet datbase
-curl -sL "https://script.google.com/macros/s/AKfycbzE00zLkrl-k0-MWb0wbshUrLGuaPIUZNl_wPXGVxpU01DiBfS6mcUzFe8YzyHWXw8a/exec" > public/data/all.csv
+mkdir -p public/data
+curl -sL "$CSV_URL" -o public/data/all.csv
 
-# all.json
-python3 csv2json_small.py public/data/all.csv public/data/
+python3 csv2json_small.py              public/data/all.csv public/data
+python3 summarize_progress.py          public/data/summary.json
+python3 summarize_progress_absolute.py public/data/summary_absolute.json
 
-# summary.json
-python3 summarize_progress.py ./public/data/summary.json
-
-# summary_absolute.json
-python3 summarize_progress_absolute.py ./public/data/summary_absolute.json
-
-git add -N .
-
-if ! git diff --exit-code --quiet
-then
-    git add .
-    git commit -m "Update"
-    git push
-    source .env
-    npx netlify-cli deploy --prod --message "Deploy" --dir=./public --auth $NETLIFY_AUTH_TOKEN
-fi
+netlify deploy --dir=public --prod --message "auto update"
