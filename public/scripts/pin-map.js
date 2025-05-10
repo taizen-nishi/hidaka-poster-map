@@ -83,40 +83,15 @@ async function loadBoardPins(pins, layer, status=null) {
 function onLocationError(e) {
   // alert(e.message);
   const mapConfig = {
-    '23-east': {
-      'lat': 35.7266074,
-      'long': 139.8292152,
-      'zoom': 14,
-    },
-    '23-west': {
-      'lat': 35.6861171,
-      'long': 139.6490942,
+    'hidaka-coast': {
+      'lat': 33.8807,
+      'long': 135.1646,
       'zoom': 13,
     },
-    '23-city': {
-      'lat': 35.6916896,
-      'long': 139.7254559,
-      'zoom': 14,
-    },
-    'tama-north': {
-      'lat': 35.731028, 
-      'long': 139.481822,
+    'hidaka-inland': {
+      'lat': 33.8152,
+      'long': 135.2045,
       'zoom': 13,
-    },
-    'tama-south': {
-      'lat': 35.6229399,
-      'long': 139.4584664,
-      'zoom': 13,
-    },
-    'tama-west': {
-      'lat': 35.7097579, 
-      'long': 139.2904051,
-      'zoom': 12,
-    },
-    'island': {
-      'lat': 34.5291416,
-      'long': 139.2819004,
-      'zoom': 11,
     },
   }
   const block = getBlockFromUrlParam()
